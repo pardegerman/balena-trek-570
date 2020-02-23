@@ -1,0 +1,17 @@
+FROM balenalib/%%BALENA_MACHINE_NAME%%-golang:latest-build AS build
+WORKDIR /go
+
+RUN go get github.com/showwin/speedtest-go
+
+FROM balenalib/%%BALENA_MACHINE_NAME%%-alpine:edge
+
+RUN apk add --no-cache \
+    gpsd-clients \
+    connman \
+    pciutils
+
+COPY --from=build /go/bin/* /usr/bin/
+
+ENV udev=1
+ENV DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
+CMD sleep infinity

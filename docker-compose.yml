@@ -1,0 +1,14 @@
+version: '2'
+services:
+  gpsd:
+    build: ./gpsd
+    devices:
+      - "/dev/ttyS1:/dev/ttyGNSS"
+    labels:
+      io.balena.features.dbus: '1'
+  tools:
+    build: ./tools
+    labels:
+      io.balena.features.dbus: '1'
+    depends_on:
+      - gpsd
